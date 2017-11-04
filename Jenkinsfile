@@ -22,6 +22,11 @@ node {
       sh "docker push registry.k8sops.mpacops.ca/example/simple-maven"   
    }
    
+   stage('Deploy') {
+      sh "kubectl apply -f k8s/deployment.yaml"
+      sh "kubectl rollout status deployment/simple-maven"
+   }
+   
    stage('Results') {
       junit '**/target/surefire-reports/TEST-*.xml'
       archive 'target/*.jar'
