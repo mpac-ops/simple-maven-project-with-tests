@@ -15,7 +15,13 @@ node {
       } else {
          bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
       }
+      sh "docker build -t registry.k8sops.mpacops.ca/example/simple-maven -f Dockerfile ."
    }
+   
+   stage('Push') {
+      sh "docker push registry.k8sops.mpacops.ca/example/simple-maven"   
+   }
+   
    stage('Results') {
       junit '**/target/surefire-reports/TEST-*.xml'
       archive 'target/*.jar'
